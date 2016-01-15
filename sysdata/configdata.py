@@ -1,9 +1,11 @@
 """
 Configuration is used to control the behaviour of a system
 
-Config can be passed as a dict, a filename from which a YAML spec is read in and then parsed
+Config can be passed as a dict, a filename from which a YAML spec is read in
+and then parsed
 
-There are no set elements for configurations, although typically they will contain:
+There are no set elements for configurations, although typically they will
+contain:
 
 parameters - a dict of values which override those in system.defaults
 trading_rules - a specification of the trading rules for a system
@@ -22,7 +24,9 @@ class Config(object):
         :param config_object: Eithier:
                         a string (which points to a YAML filename)
                         or a dict (which may nest many things)
-                        or a list of strings or dicts (build config from multiple elements, latter elements will overwrite earlier oness)
+                        or a list of strings or dicts (build config from
+                        multiple elements, latter elements will overwrite
+                        earlier oness)
 
         :type config_object: str or dict
 
@@ -34,7 +38,8 @@ class Config(object):
         >>> Config("sysdata.tests.exampleconfig.yaml")
         Config with elements: parameters, trading_rules
 
-        >>> Config(["sysdata.tests.exampleconfig.yaml", dict(parameters=dict(p1=3, p2=4.6), another_thing=[])])
+        >>> Config(["sysdata.tests.exampleconfig.yaml",
+            dict(parameters=dict(p1=3, p2=4.6), another_thing=[])])
         Config with elements: another_thing, parameters, trading_rules
 
         """
@@ -61,7 +66,8 @@ class Config(object):
 
         else:
             raise Exception(
-                "Can only create a config with a nested dict or the string of a 'yamable' filename, or a list comprising these things")
+                "Can only create a config with a nested dict or the string "
+                "of a 'yamable' filename, or a list comprising these things")
 
     def _create_config_from_dict(self, config_object):
         """

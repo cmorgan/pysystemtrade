@@ -10,12 +10,13 @@ class PortfoliosFixed(SystemStage):
     """
     Stage for portfolios
 
-    Gets the position, accounts for instrument weights and diversification multiplier
+    Gets the position, accounts for instrument weights and diversification
+    multiplier
 
     This version involves fixed weights and multipliers.
 
-    Note: At this stage we're dealing with a notional, fixed, amount of capital.
-         We'll need to work out p&l to scale positions properly
+    Note: At this stage we're dealing with a notional, fixed, amount of
+        capital. We'll need to work out p&l to scale positions properly
 
     KEY INPUT: system.positionSize.get_subsystem_position(instrument_code)
                 found in self.get_subsystem_position(instrument_code)
@@ -33,7 +34,8 @@ class PortfoliosFixed(SystemStage):
 
         """
         protected = ["get_instrument_weights",
-                     "get_instrument_diversification_multiplier", "get_raw_instrument_weights"]
+                     "get_instrument_diversification_multiplier",
+                     "get_raw_instrument_weights"]
 
         setattr(self, "_protected", protected)
 
@@ -41,7 +43,8 @@ class PortfoliosFixed(SystemStage):
 
     def get_subsystem_position(self, instrument_code):
         """
-        Get the position assuming all capital in one position, from a previous module
+        Get the position assuming all capital in one position, from a previous
+        module
 
         :param instrument_code: instrument to get values for
         :type instrument_code: str
@@ -69,12 +72,14 @@ class PortfoliosFixed(SystemStage):
         """
         Get the instrument weights
 
-        These are 'raw' because we need to account for potentially missing positions, and weights that don't add up.
+        These are 'raw' because we need to account for potentially missing
+        positions, and weights that don't add up.
 
         From: (a) passed into subsystem when created
               (b) ... if not found then: in system.config.instrument_weights
 
-        :returns: TxK pd.DataFrame containing weights, columns are instrument names, T covers all subsystem positions
+        :returns: TxK pd.DataFrame containing weights, columns are instrument
+            names, T covers all subsystem positions
 
         >>> from systems.tests.testdata import get_test_object_futures_with_pos_sizing
         >>> from systems.basesystem import System
@@ -104,10 +109,12 @@ class PortfoliosFixed(SystemStage):
                 instruments = self.parent.data.get_instrument_list()
                 weight = 1.0 / len(instruments)
 
-                print("WARNING: No instrument weights  - using equal weights of %.4f over all %d instruments in data" %
+                print("WARNING: No instrument weights  - using equal weights "
+                      "of %.4f over all %d instruments in data" %
                       (weight, len(instruments)))
                 instrument_weights = dict(
-                    [(instrument_code, weight) for instrument_code in instruments])
+                    [(instrument_code, weight) for
+                     instrument_code in instruments])
 
             # Now we have a dict, fixed_weights.
             # Need to turn into a timeseries covering the range of forecast
@@ -136,14 +143,19 @@ class PortfoliosFixed(SystemStage):
             return instrument_weights_weights
 
         instrument_weights = self.parent.calc_or_cache(
-            "get_raw_instrument_weights", ALL_KEYNAME, _get_instrument_weights, self)
+            "get_raw_instrument_weights",
+            ALL_KEYNAME,
+            _get_instrument_weights,
+            self)
         return instrument_weights
 
     def get_instrument_weights(self):
         """
-        Get the time series of instrument weights, accounting for potentially missing positions, and weights that don't add up.
+        Get the time series of instrument weights, accounting for potentially
+        missing positions, and weights that don't add up.
 
-        :returns: TxK pd.DataFrame containing weights, columns are instrument names, T covers all subsystem positions
+        :returns: TxK pd.DataFrame containing weights, columns are instrument
+            names, T covers all subsystem positions
 
 
         """
@@ -153,8 +165,9 @@ class PortfoliosFixed(SystemStage):
             raw_instr_weights = this_stage.get_raw_instrument_weights()
             instrument_list = list(raw_instr_weights.columns)
 
-            subsys_positions = [this_stage.get_subsystem_position(instrument_code)
-                                for instrument_code in instrument_list]
+            subsys_positions = [
+                this_stage.get_subsystem_position(instrument_code)
+                for instrument_code in instrument_list]
 
             subsys_positions = pd.concat(subsys_positions, axis=1).ffill()
             subsys_positions.columns = instrument_list
@@ -165,7 +178,11 @@ class PortfoliosFixed(SystemStage):
             return instrument_weights
 
         instrument_weights = self.parent.calc_or_cache(
-            "get_instrument_weights", ALL_KEYNAME, _get_clean_instrument_weights, self)
+            "get_instrument_weights",
+            ALL_KEYNAME,
+            _get_clean_instrument_weights,
+            self)
+
         return instrument_weights
 
     def get_instrument_list(self):
@@ -182,7 +199,8 @@ class PortfoliosFixed(SystemStage):
         """
         Get the instrument diversification multiplier
 
-        :returns: TxK pd.DataFrame containing weights, columns are instrument names, T covers all subsystem positions
+        :returns: TxK pd.DataFrame containing weights, columns are instrument
+            names, T covers all subsystem positions
 
         >>> from systems.tests.testdata import get_test_object_futures_with_pos_sizing
         >>> from systems.basesystem import System
@@ -211,8 +229,8 @@ class PortfoliosFixed(SystemStage):
             elif "instrument_div_multiplier" in system_defaults:
                 div_mult = system_defaults["instrument_div_multiplier"]
             else:
-                raise Exception(
-                    "Instrument div. multiplier must be in system.config or system_defaults")
+                raise Exception("Instrument div. multiplier must be in "
+                                "system.config or system_defaults")
 
             # Now we have a fixed weight
             # Need to turn into a timeseries covering the range of forecast
@@ -227,15 +245,31 @@ class PortfoliosFixed(SystemStage):
             return ts_idm
 
         instrument_div_multiplier = self.parent.calc_or_cache(
-            "get_instrument_diversification_multiplier", ALL_KEYNAME, _get_instrument_div_multiplier, self)
+            "get_instrument_diversification_multiplier",
+            ALL_KEYNAME,
+            _get_instrument_div_multiplier,
+            self)
         return instrument_div_multiplier
+
+    def get_notional_positions(self):
+        """
+        Gets poitions for all instrument weights
+        """
+        instruments = self.get_instrument_list()
+        instrument_list = []
+        for instrument in instruments:
+            pos = self.get_notional_position(instrument)
+            pos.columns = [instrument]
+            instrument_list.append(pos)
+        return pd.concat(instrument_list, 1)
 
     def get_notional_position(self, instrument_code):
         """
-        Gets the position, accounts for instrument weights and diversification multiplier
+        Gets the position, accounts for instrument weights and diversification
+        multiplier
 
-        Note: At this stage we're dealing with a notional, fixed, amount of capital.
-             We'll need to work out p&l to scale positions properly
+        Note: At this stage we're dealing with a notional, fixed, amount of
+             capital. We'll need to work out p&l to scale positions properly
 
         :param instrument_code: instrument to get values for
         :type instrument_code: str
@@ -276,7 +310,10 @@ class PortfoliosFixed(SystemStage):
             return notional_position
 
         notional_position = self.parent.calc_or_cache(
-            "get_notional_position", instrument_code, _get_notional_position, self)
+            "get_notional_position",
+            instrument_code,
+            _get_notional_position,
+            self)
         return notional_position
 
 

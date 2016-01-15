@@ -33,12 +33,14 @@ class Account(SystemStage):
         system.positionSize.get_instrument_sizing_data()
             found in self.get_value_of_price_move()
 
-        system.rawdata.daily_returns_volatility() or system.data.get_instrument_price(instrument_code)
-            found in self.get_daily_returns_volatility()
+        system.rawdata.daily_returns_volatility() or
+            system.data.get_instrument_price(instrument_code) found in
+            self.get_daily_returns_volatility()
 
-    KEY OUTPUT: None
+    Key OUTPUT: None
 
-    NOTE - there are many unused methods in this function - reserved for future use
+    NOTE - there are many unused methods in this function - reserved for future
+    use
 
     Name: accounts
     """
@@ -46,9 +48,6 @@ class Account(SystemStage):
     def __init__(self):
         """
         Create a SystemStage for accounting
-
-
-
         """
 
         protected = []
@@ -98,8 +97,6 @@ class Account(SystemStage):
         :returns: Tx1 pd.DataFrame
 
         NOT USED YET
-
-
         """
 
         return self.parent.portfolio.get_instrument_diversification_multiplier()
@@ -123,12 +120,9 @@ class Account(SystemStage):
         """
         Get instrument weights
 
-
         :returns: Tx1 pd.DataFrame
 
         NOT USED YET
-
-
         """
 
         return self.parent.portfolio.get_instrument_weights()
@@ -319,8 +313,8 @@ class Account(SystemStage):
 
         return price_volatility
 
-    def pandl_for_instrument(
-            self, instrument_code, percentage=True, delayfill=True, roundpositions=False):
+    def pandl_for_instrument(self, instrument_code, percentage=True,
+                             delayfill=True, roundpositions=False):
         """
         Get the p&l for one instrument
 
@@ -351,8 +345,8 @@ class Account(SystemStage):
         0.095000000000000001
         """
 
-        def _pandl_for_instrument(
-                system, instrument_code, this_stage, percentage, delayfill, roundpositions):
+        def _pandl_for_instrument(system, instrument_code, this_stage,
+                                  percentage, delayfill, roundpositions):
             price = this_stage.get_instrument_price(instrument_code)
             positions = this_stage.get_notional_position(instrument_code)
             fx = this_stage.get_fx_rate(instrument_code)

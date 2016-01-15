@@ -59,8 +59,14 @@ def futures_system(data=None, config=None, trading_rules=None):
 
     rules = Rules(trading_rules)
 
-    system = System([Account(), PortfoliosFixed(), PositionSizing(), FuturesRawData(), ForecastCombineFixed(),
-                     ForecastScaleCapFixed(), rules], data, config)
+    system = System([Account(),
+                     PortfoliosFixed(),
+                     PositionSizing(),
+                     FuturesRawData(),
+                     ForecastCombineFixed(),
+                     ForecastScaleCapFixed(),
+                     rules],
+                    data, config)
 
     return system
 

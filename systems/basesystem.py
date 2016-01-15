@@ -16,8 +16,6 @@ class System(object):
         made up of stages
 
        take a data, and optionally a config object
-
-
     '''
 
     def __init__(self, stage_list, data, config=None):
@@ -25,7 +23,8 @@ class System(object):
         Create a system object for doing simulations or live trading
 
         :param stage_list: A list of stages
-        :type stage_list: list of systems.stage.SystemStage (or anything that inherits from it)
+        :type stage_list: list of systems.stage.SystemStage (or anything that
+            inherits from it)
 
         :param data: data for doing simulations
         :type data: sysdata.data.Data (or anything that inherits from that)
@@ -57,10 +56,9 @@ class System(object):
         assert isinstance(stage_list, list)
 
         for stage in stage_list:
-
             """
-            This is where we put the methods to store various stages of the process
-
+            This is where we put the methods to store various stages of the
+            process
             """
 
             # Each stage has a link back to the parent system
@@ -109,7 +107,8 @@ class System(object):
     """
     A cache lives inside each system object, storing preliminary results
 
-    There are 3 kinds of things in a cache with different levels of persistence:
+    There are 3 kinds of things in a cache with different levels of
+    persistence:
       - anything that isn't special
       - things that have an 'all' key -
       - _protected - that wouldn't normally be deleted
@@ -139,10 +138,13 @@ class System(object):
         """
 
         items_with_data = self.get_items_with_data()
+
         items_code_list = [self.get_instrument_codes_for_item(itemname) for
                            itemname in items_with_data]
-        items_with_instrument_data = [itemname for (itemname, code_list) in zip(
-            items_with_data, items_code_list) if instrument_code in code_list]
+
+        items_with_instrument_data = [itemname for (itemname, code_list) in
+                                      zip(items_with_data, items_code_list) if
+                                      instrument_code in code_list]
 
         return items_with_instrument_data
 
@@ -169,7 +171,8 @@ class System(object):
         :param instrument_code: Instrument to delete
         :type instrument_code: str
 
-        :param deleted_protected: Delete everything, even stuff in self.protected?
+        :param deleted_protected: Delete everything, even stuff in
+            self.protected?
         :type delete_protected: bool
 
 
@@ -183,8 +186,8 @@ class System(object):
         sectional data which we only want to calculate periodically
 
         if delete_protected is True then we delete that stuff as well
-        (this is roughly equivalent to creating the systems object from scratch)
-
+        (this is roughly equivalent to creating the systems object from
+        scratch)
         """
         item_list = self.get_items_for_instrument(instrument_code)
         if not delete_protected:
@@ -192,7 +195,8 @@ class System(object):
             item_list = [itemname for itemname in item_list if itemname not in
                          protected_items]
 
-        deleted_values = [self._delete_item_from_cache(itemname, instrument_code) for
+        deleted_values = [self._delete_item_from_cache(itemname,
+                                                       instrument_code) for
                           itemname in item_list]
 
         return deleted_values
@@ -209,8 +213,8 @@ class System(object):
 
         if not delete_protected:
             protected_items = self.get_protected_items()
-            item_list = [
-                itemname for itemname in item_list if itemname not in protected_items]
+            item_list = [itemname for itemname in item_list if itemname not in
+                         protected_items]
 
         deleted_values = [self.delete_item(itemname) for itemname in item_list]
 
@@ -227,7 +231,8 @@ class System(object):
         :param instrument_code: The instrument to get it from
         :type instrument_code: str
 
-        :param keyname: The further key (eg rule variation name) to get for a nested item
+        :param keyname: The further key (eg rule variation name) to get for a
+            nested item
         :type keyname: str
 
         :returns: None or item
@@ -267,7 +272,8 @@ class System(object):
         :param instrument_code: The instrument to get it from
         :type instrument_code: str
 
-        :param keyname: The further key (eg rule variation name) to get for a nested item
+        :param keyname: The further key (eg rule variation name) to get for a
+            nested item
         :type keyname: str
 
         :returns: None or item
@@ -309,7 +315,8 @@ class System(object):
         :param instrument_code: The instrument to set
         :type instrument_code: str
 
-        :param keyname: The further key (eg rule variation name) to set for a nested item
+        :param keyname: The further key (eg rule variation name) to set for a
+            nested item
         :type keyname: str
 
         :returns: None or item
