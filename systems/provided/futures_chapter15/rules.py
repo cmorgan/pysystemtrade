@@ -76,6 +76,8 @@ def carry(daily_ann_roll, vol, smooth_days=90):
     2015-04-21               0.350892
     2015-04-22               0.350892
     """
+    import pdb; pdb.set_trace()  # BREAKPOINT
+
 
     ann_stdev = vol * ROOT_BDAYS_INYEAR
     raw_carry = divide_df_single_column(daily_ann_roll, ann_stdev)
