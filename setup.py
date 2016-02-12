@@ -18,8 +18,8 @@ setup(
     url="http://qoppac.blogspot.co.uk/p/pysystemtrade.html",
     packages=['examples', 'syscore', 'sysdata', 'systems', 'syssims'],
     long_description=read('README.md'),
-    install_requires=["pandas >= 0.17.0", "numpy >= 1.10.1", "python >= 3.4.3", "matlotplib > 1.4.3",
-                      "yaml > 3.11"],
+    install_requires=["pandas >= 0.17.0", "numpy >= 1.10.1", "matplotlib > 1.4.3",
+                      "pyyaml >= 3.11"],
     extras_require=dict(),
     include_package_data=True
 )

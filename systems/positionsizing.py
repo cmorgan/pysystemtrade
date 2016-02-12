@@ -29,7 +29,6 @@ class PositionSizing(SystemStage):
                 e)  system.data.get_fx_for_instrument(instrument_code, base_currency)
                    found in self.get_fx_rate(instrument_code)
 
-
     KEY OUTPUT: system.positionSize.get_subsystem_position(instrument_code)
 
     Name: positionSize
@@ -38,8 +37,6 @@ class PositionSizing(SystemStage):
     def __init__(self):
         """
         Create a SystemStage for combining forecasts
-
-
         """
         protected = ['get_daily_cash_vol_target']
         setattr(self, "_protected", protected)

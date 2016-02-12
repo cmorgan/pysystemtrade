@@ -1,0 +1,47 @@
+#YAML
+#
+# Raw data
+#
+volatility_calculation:
+  func: "syscore.algos.robust_vol_calc"
+  days: 35
+#
+# Trading rules
+#
+trading_rules:
+  carry:
+     function: systems.provided.futures_chapter15.rules.carry
+     data:
+         - "rawdata.daily_annualised_roll"
+         - "rawdata.daily_returns_volatility"
+     other_args:
+         smooth_days: 90
+     forecast_scalar: 30
+forecast_cap: 20.0
+#
+# forecast combination
+#
+forecast_weights:
+     carry: 0.50
+forecast_div_multiplier: 1.31
+#
+# Capital correction
+#
+percentage_vol_target: 20.0
+notional_trading_capital: 250000
+base_currency: "USD"
+#
+# Portfolio creation
+#
+instrument_weights:
+    EDOLLAR: 0.5
+    GAS_US: 0.5
+    # US10: 0.117
+    # EUROSTX: 0.20
+    # V2X: 0.098
+    MXP: 0.233
+    # CORN: 0.233
+instrument_div_multiplier: 1.89
+rule_groups:
+    carry:
+       - carry

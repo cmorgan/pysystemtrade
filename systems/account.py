@@ -50,9 +50,6 @@ class Account(SystemStage):
     def __init__(self):
         """
         Create a SystemStage for accounting
-
-
-
         """
 
         protected = []
@@ -150,7 +147,6 @@ class Account(SystemStage):
 
         """
         return self.parent.positionSize.get_subsystem_position(instrument_code)
-
 
     def get_trading_rules(self):
         """
@@ -288,6 +284,7 @@ class Account(SystemStage):
         2500
         """
 
+        # block price move
         (not_used, value_of_price_move) = self.parent.positionSize.get_instrument_sizing_data(
             instrument_code)
 
@@ -385,9 +382,8 @@ class Account(SystemStage):
 
         return instr_pandl
 
-
-    def pandl_for_instrument(
-            self, instrument_code, percentage=True, delayfill=True, roundpositions=False):
+    def pandl_for_instrument(self, instrument_code, percentage=True, delayfill=True,
+                             roundpositions=False):
         """
         Get the p&l for one instrument
 
@@ -418,12 +414,12 @@ class Account(SystemStage):
         0.14299999999999999
         """
 
-        def _pandl_for_instrument(
-                system, instrument_code, this_stage, percentage, delayfill, roundpositions):
+        def _pandl_for_instrument(system, instrument_code, this_stage, percentage,
+                                  delayfill, roundpositions):
 
             this_stage.log.msg("Calculating pandl for instrument for %s" % instrument_code,
                                instrument_code=instrument_code)
-            
+
             price = this_stage.get_daily_price(instrument_code)
             positions = this_stage.get_notional_position(instrument_code)
             fx = this_stage.get_fx_rate(instrument_code)
@@ -450,7 +446,7 @@ class Account(SystemStage):
     def pandl_for_instrument_rules(self, instrument_code, delayfill=True):
         """
         Get the p&l for one instrument over multiple forecasts; as % of arbitrary capital
-        
+
         KEY OUTPUT
 
         :param instrument_code: instrument to get values for
@@ -478,23 +474,23 @@ class Account(SystemStage):
 
             this_stage.log.terse("Calculating pandl for instrument rules for %s" % instrument_code,
                                  instrument_code=instrument_code)
-            
+
             forecast_rules=system.combForecast.get_trading_rule_list(instrument_code
                                                                      )
             pandl_rules=pd.concat([this_stage.pandl_for_instrument_forecast(
                                             instrument_code, rule_variation_name, delayfill)
-                              for rule_variation_name in forecast_rules   
+                              for rule_variation_name in forecast_rules
                             ], axis=1)
-            
+
             pandl_rules.columns=forecast_rules
-            
+
             return pandl_rules
 
         itemname = "pandl_for_instrument__rules_delayfill%s" % TorF(
             delayfill)
 
         pandl_rules = self.parent.calc_or_cache(
-            itemname, instrument_code, 
+            itemname, instrument_code,
             _pandl_for_instrument_rules, self, delayfill)
 
         return pandl_rules
@@ -602,6 +598,8 @@ class Account(SystemStage):
         port_pandl = self.parent.calc_or_cache(
             itemname, ALL_KEYNAME, _portfolio, self, percentage, delayfill,
             roundpositions)
+
+        print(itemname)
 
         return port_pandl
 

@@ -53,6 +53,7 @@ def futures_system(data=None, config=None, trading_rules=None, log_level="on"):
                    carry
     2015-04-21  0.350892
     2015-04-22  0.350892
+
     """
 
     if data is None:

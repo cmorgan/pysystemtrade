@@ -96,8 +96,10 @@ class FuturesRawData(RawData):
             raw_roll = raw_roll.to_frame('raw_roll')
             return raw_roll
 
-        raw_roll = self.parent.calc_or_cache(
-            "raw_futures_roll", instrument_code, _calc_raw_futures_roll, self)
+        raw_roll = self.parent.calc_or_cache("raw_futures_roll",
+                                             instrument_code,
+                                             _calc_raw_futures_roll,
+                                             self)
 
         return raw_roll
 
@@ -122,14 +124,18 @@ class FuturesRawData(RawData):
         def _calc_roll_differentials(system, instrument_code, this_subsystem):
             carrydata = this_subsystem.get_instrument_raw_carry_data(
                 instrument_code)
+
+            # day diff per annum between contracts
             roll_diff = carrydata.apply(expiry_diff, 1)
 
             roll_diff = roll_diff.to_frame('roll_diff')
 
             return roll_diff
 
-        roll_diff = self.parent.calc_or_cache(
-            "roll_differentials", instrument_code, _calc_roll_differentials, self)
+        roll_diff = self.parent.calc_or_cache("roll_differentials",
+                                              instrument_code,
+                                              _calc_roll_differentials,
+                                              self)
 
         return roll_diff
 
@@ -162,8 +168,10 @@ class FuturesRawData(RawData):
 
             return annroll
 
-        annroll = self.parent.calc_or_cache(
-            "annualised_roll", instrument_code, _calc_annualised_roll, self)
+        annroll = self.parent.calc_or_cache("annualised_roll",
+                                            instrument_code,
+                                            _calc_annualised_roll,
+                                            self)
 
         return annroll
 
@@ -197,8 +205,10 @@ class FuturesRawData(RawData):
             annroll.columns = ['annualised_roll_daily']
             return annroll
 
-        ann_daily_roll = self.parent.calc_or_cache(
-            "daily_annualised_roll", instrument_code, _calc_daily_ann_roll, self)
+        ann_daily_roll = self.parent.calc_or_cache("daily_annualised_roll",
+                                                   instrument_code,
+                                                   _calc_daily_ann_roll,
+                                                   self)
 
         return ann_daily_roll
 

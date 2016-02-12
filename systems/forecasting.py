@@ -124,8 +124,8 @@ class Rules(SystemStage):
 
         """
 
-        def _get_raw_forecast(system, instrument_code,
-                          rule_variation_name, rules_stage):
+        def _get_raw_forecast(system, instrument_code, rule_variation_name,
+                              rules_stage):
             # This function gets called if we haven't cached the forecast
             rules_stage.log.msg("Calculating raw forecast %s for %s" % (instrument_code, rule_variation_name),
                                 instrument_code=instrument_code, rule_variation_name=rule_variation_name)
@@ -262,8 +262,8 @@ class TradingRule(object):
         else:
             datalist = self.data
 
-        data_methods = [resolve_data_method(
-            system, data_string) for data_string in datalist]
+        data_methods = [resolve_data_method(system, data_string) for
+                        data_string in datalist]
         data = [data_method(instrument_code) for data_method in data_methods]
 
         other_args = self.other_args
