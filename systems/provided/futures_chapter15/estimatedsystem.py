@@ -25,15 +25,19 @@ def futures_system(data=None, config=None,
     :param data: data object (defaults to reading from csv files)
     :type data: sysdata.data.Data, or anything that inherits from it
 
-    :param config: Configuration object (defaults to futuresconfig.yaml in this directory)
+    :param config: Configuration object (defaults to futuresconfig.yaml in this
+      directory)
     :type config: sysdata.configdata.Config
 
-    :param trading_rules: Set of trading rules to use (defaults to set specified in config object)
-    :param trading_rules: list or dict of TradingRules, or something that can be parsed to that
+    :param trading_rules: Set of trading rules to use (defaults to set
+      specified in config object)
 
-    :param log_level: Set of trading rules to use (defaults to set specified in config object)
+    :param trading_rules: list or dict of TradingRules, or something that can
+      be parsed to that
+
+    :param log_level: Set of trading rules to use (defaults to set specified in
+      config object)
     :type log_level: str
-
     """
 
     if data is None:
@@ -45,8 +49,12 @@ def futures_system(data=None, config=None,
 
     rules = Rules(trading_rules)
 
-    system = System([Account(), Portfolios(), PositionSizing(),
-                     FuturesRawData(), ForecastCombine(), ForecastScaleCap(),
+    system = System([Account(),
+                     Portfolios(),
+                     PositionSizing(),
+                     FuturesRawData(),
+                     ForecastCombine(),
+                     ForecastScaleCap(),
                      rules], data, config)
 
     system.set_logging_level(log_level)

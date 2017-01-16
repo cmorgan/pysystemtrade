@@ -15,7 +15,8 @@ class ForecastCombine(SystemStage):
     """
     Stage for combining forecasts (already capped and scaled)
 
-    This is a 'switching' class which selects eithier the fixed or the estimated flavours
+    This is a 'switching' class which selects eithier the fixed or the
+      estimated flavours
 
     """
 

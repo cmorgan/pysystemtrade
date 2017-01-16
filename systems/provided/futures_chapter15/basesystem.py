@@ -19,15 +19,17 @@ from systems.account import Account
 
 def futures_system(data=None, config=None, trading_rules=None, log_level="on"):
     """
-
     :param data: data object (defaults to reading from csv files)
     :type data: sysdata.data.Data, or anything that inherits from it
 
-    :param config: Configuration object (defaults to futuresconfig.yaml in this directory)
+    :param config: Configuration object (defaults to futuresconfig.yaml in this
+      directory)
     :type config: sysdata.configdata.Config
 
-    :param trading_rules: Set of trading rules to use (defaults to set specified in config object)
-    :type trading_rules: list or dict of TradingRules, or something that can be parsed to that
+    :param trading_rules: Set of trading rules to use (defaults to set
+      specified in config object)
+    :type trading_rules: list or dict of TradingRules, or something that can be
+      parsed to that
 
     :param log_level: How much logging to do
     :type log_level: str
@@ -35,7 +37,8 @@ def futures_system(data=None, config=None, trading_rules=None, log_level="on"):
 
     >>> system=futures_system(log_level="off")
     >>> system
-    System with stages: accounts, portfolio, positionSize, rawdata, combForecast, forecastScaleCap, rules
+    System with stages: accounts, portfolio, positionSize, rawdata,
+      combForecast, forecastScaleCap, rules
     >>> system.rules.get_raw_forecast("EDOLLAR", "ewmac2_8").dropna().head(2)
                 ewmac2_8
     1983-10-10  0.695929
@@ -63,8 +66,13 @@ def futures_system(data=None, config=None, trading_rules=None, log_level="on"):
 
     rules = Rules(trading_rules)
 
-    system = System([Account(), PortfoliosFixed(), PositionSizing(), FuturesRawData(), ForecastCombine(),
-                     ForecastScaleCap(), rules], data, config)
+    system = System([Account(),
+                     PortfoliosFixed(),
+                     PositionSizing(),
+                     FuturesRawData(),
+                     ForecastCombine(),
+                     ForecastScaleCap(),
+                     rules], data, config)
 
     system.set_logging_level(log_level)
 

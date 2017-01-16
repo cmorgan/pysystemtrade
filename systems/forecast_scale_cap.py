@@ -377,14 +377,14 @@ class ForecastScaleCapEstimated(BaseForecastScaleCap):
                                rule_variation_name=rule_variation_name)
             # Get forecasts for each instrument
             forecast_list = [
-                this_stage.get_raw_forecast(
-                    instrument_code, rule_variation_name)
+                this_stage.get_raw_forecast(instrument_code,
+                                            rule_variation_name)
                 for instrument_code in instrument_list]
 
             cs_forecasts = pd.concat(forecast_list, axis=1)
 
-            scaling_factor = scalar_function(
-                cs_forecasts, **forecast_scalar_config)
+            scaling_factor = scalar_function(cs_forecasts,
+                                             **forecast_scalar_config)
 
             return scaling_factor
 
