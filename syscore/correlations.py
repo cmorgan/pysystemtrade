@@ -163,7 +163,7 @@ def correlation_single_period(data_for_estimate,
         dlenadj = float(len(dindex)) / len(set(list(dindex)))
         # Usual use for IDM, FDM calculation when whole data set is used
         corrmat = data_for_estimate.ewm(
-            
+
             span=int(
                 ew_lookback *
                 dlenadj),
@@ -227,24 +227,25 @@ class CorrelationList(object):
 
 class CorrelationEstimator(CorrelationList):
     '''
-
-    We generate a correlation list from eithier a pd.DataFrame, or a list of them if we're pooling
+    We generate a correlation list from eithier a pd.DataFrame, or a list of
+      them if we're pooling
 
     The default is to generate correlations annually, from weekly
 
-    It's important that forward filling, or index / ffill / diff has been done before we begin
-
-
+    It's important that forward filling, or index / ffill / diff has been done
+      before we begin
     '''
 
-    def __init__(self, data, log=logtoscreen("optimiser"), frequency="W", date_method="expanding",
-                 rollyears=20,
-                 dict_group=dict(), boring_offdiag=0.99, cleaning=True, **kwargs):
+    def __init__(self, data, log=logtoscreen("optimiser"), frequency="W",
+                 date_method="expanding", rollyears=20, dict_group=dict(),
+                 boring_offdiag=0.99, cleaning=True, **kwargs):
         """
 
-        We generate a correlation from eithier a pd.DataFrame, or a list of them if we're pooling
+        We generate a correlation from eithier a pd.DataFrame, or a list of
+          them if we're pooling
 
-        Its important that forward filling, or index / ffill / diff has been done before we begin
+        Its important that forward filling, or index / ffill / diff has been
+          done before we begin
 
         :param data: Data to get correlations from
         :type data: pd.DataFrame or list if pooling
@@ -261,7 +262,8 @@ class CorrelationEstimator(CorrelationList):
         :param dict_group: dictionary of groupings; used to replace missing values
         :type dict_group: dict
 
-        :param boring_offdiag: Value used in creating 'boring' matrix, for when no data
+        :param boring_offdiag: Value used in creating 'boring' matrix, for when
+          no data
         :type boring_offdiag: float
 
         :param **kwargs: passed to correlation_single_period
@@ -291,6 +293,7 @@ class CorrelationEstimator(CorrelationList):
 
         log.terse("Correlation estimate")
 
+        # TODO multiprocessing
         # Now for each time period, estimate correlation
         for fit_period in fit_dates:
             log.msg("Estimating from %s to %s" %

@@ -186,24 +186,29 @@ class GenericOptimiser(object):
 
         # Now for each time period, estimate weights
         # create a list of weight vectors
-        weight_list = []
 
         # create a class object for each period
-        opt_results = []
 
         log.terse("Optimising...")
 
         # TODO multiprocess
-        for fit_period in fit_dates:
-            log.msg("Optimising for data from %s to %s" %
-                    (str(fit_period.period_start), str(fit_period.period_end)))
-            # Do the optimisation for one period, using a particular optimiser
-            # instance
-            results_this_period = optSinglePeriod(
-                self, data, fit_period, optimiser, cleaning)
+        po = partial(partial_opt, self, data, optimiser, cleaning)
+        # partial_opt = lambda fit_period: optSinglePeriod(self, data, fit_period,
+        #                                           optimiser, cleaning)
+        from multiprocessing import Pool
+        mp = True
+        if mp:
+            pool = Pool(processes=3)
+            mapper = pool.map
+            log.terse('Multiprocessing!!!')
+        else:
+            mapper = map
 
-            opt_results.append(results_this_period)
+        opt_results = mapper(po, fit_dates)
 
+        # construct weights
+        weight_list = []
+        for fit_period, results_this_period in zip(fit_dates, opt_results):
             weights = results_this_period.weights
 
             # We adjust dates slightly to ensure no overlaps
@@ -211,9 +216,31 @@ class GenericOptimiser(object):
                       fit_period.period_end - datetime.timedelta(days=1)]
 
             # create a double row to delineate start and end of test period
-            weight_row = pd.DataFrame(
-                [weights] * 2, index=dindex, columns=data.columns)
+            weight_row = pd.DataFrame([weights] * 2,
+                                      index=dindex,
+                                      columns=data.columns)
             weight_list.append(weight_row)
+
+        # for fit_period in fit_dates:
+        #     log.msg("Optimising for data from %s to %s" %
+        #             (str(fit_period.period_start), str(fit_period.period_end)))
+        #     # Do the optimisation for one period, using a particular optimiser
+        #     # instance
+        #     results_this_period = optSinglePeriod(
+        #         self, data, fit_period, optimiser, cleaning)
+
+        #     opt_results.append(results_this_period)
+
+        #     weights = results_this_period.weights
+
+        #     # We adjust dates slightly to ensure no overlaps
+        #     dindex = [fit_period.period_start + datetime.timedelta(days=1),
+        #               fit_period.period_end - datetime.timedelta(days=1)]
+
+        #     # create a double row to delineate start and end of test period
+        #     weight_row = pd.DataFrame(
+        #         [weights] * 2, index=dindex, columns=data.columns)
+        #     weight_list.append(weight_row)
 
         # Stack everything up
         raw_weight_df = pd.concat(weight_list, axis=0)
@@ -449,6 +476,11 @@ class optimiserWithParams(object):
         params = self.params
         return self.opt_func(
             optimise_data, self.moments_estimator, cleaning, must_haves, **params)
+
+from functools import partial
+
+def partial_opt(parent, data, optimiser, cleaning, fit_period):
+    return optSinglePeriod(parent, data, fit_period, optimiser, cleaning)
 
 
 class optSinglePeriod(object):
