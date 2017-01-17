@@ -1735,9 +1735,11 @@ class Account(SystemStage):
                                                 for rulename in variations]
 
             # this is a group of groups... will it work?
-            pandl_all_rules = accountCurveGroup(pandl_by_trading_rule_unweighted, variations,
-                                                capital=ARBITRARY_FORECAST_CAPITAL,
-                                                weighted_flag=False)
+            pandl_all_rules = accountCurveGroup(
+                pandl_by_trading_rule_unweighted,
+                variations,
+                capital=ARBITRARY_FORECAST_CAPITAL,
+                weighted_flag=False)
 
             return pandl_all_rules
 
@@ -1987,10 +1989,15 @@ class Account(SystemStage):
             return instr_pandl
 
         instr_pandl = self.parent.calc_or_cache(
-            "pandl_for_instrument_with_multiplier", instrument_code, _pandl_for_instrument_with_multiplier, self,
-            delayfill, roundpositions,
+            "pandl_for_instrument_with_multiplier",
+            instrument_code,
+            _pandl_for_instrument_with_multiplier,
+            self,
+            delayfill,
+            roundpositions,
             flags="delayfill%sroundpositions%s" % (
-                TorF(delayfill), TorF(roundpositions)))
+                TorF(delayfill), TorF(roundpositions))
+        )
 
         return instr_pandl
 
@@ -2019,7 +2026,8 @@ class Account(SystemStage):
                     delayfill=delayfill,
                     roundpositions=roundpositions) for instrument_code in instruments]
 
-            port_pandl = accountCurveGroup(port_pandl, instruments,
+            port_pandl = accountCurveGroup(port_pandl,
+                                           instruments,
                                            capital=capital,
                                            weighted_flag=True)
 

@@ -300,10 +300,11 @@ class PortfoliosFixed(SystemStage):
 
     def get_notional_position(self, instrument_code):
         """
-        Gets the position, accounts for instrument weights and diversification multiplier
+        Gets the position, accounts for instrument weights and diversification
+          multiplier
 
-        Note: At this stage we're dealing with a notional, fixed, amount of capital.
-             We'll need to work out p&l to scale positions properly
+        Note: At this stage we're dealing with a notional, fixed, amount of
+          capital. We'll need to work out p&l to scale positions properly
 
         :param instrument_code: instrument to get values for
         :type instrument_code: str

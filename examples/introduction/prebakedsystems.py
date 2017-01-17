@@ -37,6 +37,7 @@ Same for estimated system
 from systems.provided.futures_chapter15.estimatedsystem import futures_system
 
 system = futures_system(log_level="on")
+
 print(system.accounts.portfolio().sharpe())
 system.accounts.portfolio().curve().plot()
 system.pickle_cache("private.this_system_name.pck")

@@ -167,9 +167,7 @@ class GenericOptimiser(object):
 
     def optimise(self, ann_SR_costs=None):
         """
-
         Optimise weights over some returns data
-
         """
         log = self.log
         date_method = self.date_method
@@ -195,6 +193,7 @@ class GenericOptimiser(object):
 
         log.terse("Optimising...")
 
+        # TODO multiprocess
         for fit_period in fit_dates:
             log.msg("Optimising for data from %s to %s" %
                     (str(fit_period.period_start), str(fit_period.period_end)))
