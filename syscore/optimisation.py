@@ -12,8 +12,11 @@ from copy import copy
 import random
 
 from syscore.algos import vol_estimator, mean_estimator
-from syscore.correlations import correlation_single_period, boring_corr_matrix, get_avg_corr
-from syscore.dateutils import generate_fitting_dates, BUSINESS_DAYS_IN_YEAR, WEEKS_IN_YEAR, MONTHS_IN_YEAR
+from syscore.correlations import (correlation_single_period,
+                                  boring_corr_matrix,
+                                  get_avg_corr)
+from syscore.dateutils import (generate_fitting_dates, BUSINESS_DAYS_IN_YEAR,
+                               WEEKS_IN_YEAR, MONTHS_IN_YEAR)
 from syscore.genutils import str2Bool
 from syscore.pdutils import df_from_list, must_have_item
 from syscore.objects import resolve_function
@@ -25,7 +28,8 @@ FLAG_BAD_RETURN = -9999999.9
 
 class GenericOptimiser(object):
 
-    def __init__(self, log=logtoscreen("optimiser"), frequency="W", date_method="expanding",
+    def __init__(self, log=logtoscreen("optimiser"),
+                 frequency="W", date_method="expanding",
                  rollyears=20, method="bootstrap", cleaning=True,
                  cost_multiplier=1.0, apply_cost_weight=True,
                  ann_target_SR=TARGET_ANN_SR, equalise_gross=False,
@@ -40,22 +44,27 @@ class GenericOptimiser(object):
         :param date_method: Method to pass to generate_fitting_dates
         :type date_method: str
 
-        :param roll_years: If date_method is "rolling", number of years in window
+        :param roll_years: If date_method is "rolling", number of years in
+          window
         :type roll_years: int
 
-        :param method: Method used for fitting, one of 'bootstrap', 'shrinkage', 'one_period'
+        :param method: Method used for fitting, one of 'bootstrap',
+          'shrinkage', 'one_period'
         :type method: str
 
-        :param equalise_gross: Should we equalise expected gross returns so that only costs affect weightings?
+        :param equalise_gross: Should we equalise expected gross returns so
+          that only costs affect weightings?
         :type equalise_gross: bool
 
         :param cost_multiplier: Multiply costs by this number
         :type cost_multiplier: float
 
-        :param apply_cost_weight: Should we adjust our weightings to reflect costs?
+        :param apply_cost_weight: Should we adjust our weightings to reflect
+          costs?
         :type apply_cost_weight: bool
 
-        :param *_estimate_params: dicts of **kwargs to pass to moments estimation, and optimisation functions
+        :param *_estimate_params: dicts of **kwargs to pass to moments
+          estimation, and optimisation functions
 
         :returns: pd.DataFrame of weights
         """
@@ -124,7 +133,8 @@ class GenericOptimiser(object):
         :param data_net: Returns data for costs
         :type data_net: pd.DataFrame or list if pooling
 
-        :param weight_matrix: some weight_matrix, used if equal weights and so don't need returns data
+        :param weight_matrix: some weight_matrix, used if equal weights and so
+          don't need returns data
         :type weight_matrix: pd.DataFrame or list if pooling
 
         """
@@ -152,15 +162,18 @@ class GenericOptimiser(object):
 
         # net gross and costs
         if equalise_gross:
-            log.terse(
-                "Setting all gross returns to be identical - optimisation driven only by costs")
+            log.terse("Setting all gross returns to be identical - "
+                      "optimisation driven only by costs")
         if cost_multiplier != 1.0:
             log.terse(
                 "Using cost multiplier on optimisation of %.2f" %
                 cost_multiplier)
 
-        data = work_out_net(data_gross, data_costs, annualisation=annualisation,
-                            equalise_gross=equalise_gross, cost_multiplier=cost_multiplier,
+        data = work_out_net(data_gross,
+                            data_costs,
+                            annualisation=annualisation,
+                            equalise_gross=equalise_gross,
+                            cost_multiplier=cost_multiplier,
                             period_target_SR=period_target_SR)
 
         setattr(self, "data", data)
@@ -198,7 +211,7 @@ class GenericOptimiser(object):
         from multiprocessing import Pool
         mp = True
         if mp:
-            pool = Pool(processes=3)
+            pool = Pool(processes=4)
             mapper = pool.map
             log.terse('Multiprocessing!!!')
         else:
@@ -649,9 +662,11 @@ def markosolver(period_subset_data, moments_estimator,
     """
     Returns the optimal portfolio for the returns data
 
-    If equalise_SR=True then assumes all assets have SR if False uses the asset natural SR
+    If equalise_SR=True then assumes all assets have SR if False uses the asset
+      natural SR
 
-    If equalise_vols=True then normalises returns to have same standard deviation; the weights returned
+    If equalise_vols=True then normalises returns to have same standard
+      deviation; the weights returned
        will be 'risk weightings'
 
     :param subset_data: The data to optimise over
@@ -660,23 +675,24 @@ def markosolver(period_subset_data, moments_estimator,
     :param cleaning: Should we clean correlations so can use incomplete data?
     :type cleaning: bool
 
-    :param must_haves: The indices of things we must have weights for, used for cleaning
+    :param must_haves: The indices of things we must have weights for, used for
+      cleaning
     :type must_haves: list of bool
 
-
-    :param equalise_SR: Set all means equal before optimising (makes more stable)
+    :param equalise_SR: Set all means equal before optimising (makes more
+      stable)
     :type equalise_SR: bool
 
-    :param equalise_vols: Set all vols equal before optimising (makes more stable)
+    :param equalise_vols: Set all vols equal before optimising (makes more
+      stable)
     :type equalise_vols: bool
 
-    Other arguments are kept so we can use **kwargs with other optimisation functions
+    Other arguments are kept so we can use **kwargs with other optimisation
+      functions
 
     *_params passed through to data estimation functions
 
-
     :returns: float
-
     """
 
     rawmoments = moments_estimator.moments(period_subset_data)

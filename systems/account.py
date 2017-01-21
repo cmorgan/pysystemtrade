@@ -75,9 +75,6 @@ class Account(SystemStage):
     def __init__(self):
         """
         Create a SystemStage for accounting
-
-
-
         """
         setattr(self, "name", "accounts")
         setattr(self, "description", "Account()")
@@ -97,7 +94,6 @@ class Account(SystemStage):
         """
         Get the capped forecast from the previous module
 
-
         KEY INPUT
 
         :param instrument_code:
@@ -115,7 +111,6 @@ class Account(SystemStage):
     def get_aligned_forecast(self, instrument_code, rule_variation_name):
         """
         Get the capped forecast aligned to daily prices
-
 
         KEY INPUT
 
@@ -567,8 +562,8 @@ class Account(SystemStage):
 
         return multiplier.reindex(price.index).ffill()
 
-    def get_forecast_scaling_factor(
-            self, instrument_code, rule_variation_name):
+    def get_forecast_scaling_factor(self, instrument_code,
+                                    rule_variation_name):
         """
         Get forecast weight * FDM
 
@@ -598,8 +593,8 @@ class Account(SystemStage):
 
         return multiplier
 
-    def get_instrument_forecast_scaling_factor(
-            self, instrument_code, rule_variation_name):
+    def get_instrument_forecast_scaling_factor(self, instrument_code,
+                                               rule_variation_name):
         """
         Get forecast weight * FDM  *instrument_weight * IDM
 
@@ -610,7 +605,6 @@ class Account(SystemStage):
         :type rule_variation_name: str
 
         :returns: Tx1 pd.DataFrame
-
         """
 
         fsf = self.get_forecast_scaling_factor(
@@ -1816,7 +1810,6 @@ class Account(SystemStage):
             capmult_func = resolve_function(capmult_params.pop("func"))
 
             capmult = capmult_func(system, **capmult_params)
-
             capmult = capmult.reindex(this_stage.portfolio().index).ffill()
 
             return capmult

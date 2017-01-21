@@ -371,7 +371,8 @@ class ForecastCombineFixed(SystemStage):
         """
         def _get_forecast_weights(system, instrument_code, this_stage):
 
-            this_stage.log.msg("Calculating forecast weights for %s" % (instrument_code),
+            this_stage.log.msg("Calculating forecast weights for %s" %
+                               (instrument_code),
                                instrument_code=instrument_code)
 
             forecast_weights = this_stage.get_raw_forecast_weights(
