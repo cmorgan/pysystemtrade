@@ -631,7 +631,8 @@ class System(object):
         :param this_stage: stage within system that is calling us
         :type this_stage: system stage
 
-        :param flags: Optional further descriptor for cache item (included in kwargs)
+        :param flags: Optional further descriptor for cache item (included in
+          kwargs)
         :type flags: str
 
         :param args, kwargs: also passed to func if called
@@ -651,8 +652,8 @@ class System(object):
 
         return value
 
-    def calc_or_cache_nested(self, itemname, instrument_code, keyname, func, this_stage,
-                             *args, **kwargs):
+    def calc_or_cache_nested(self, itemname, instrument_code, keyname, func,
+                             this_stage, *args, **kwargs):
         """
         Assumes that self._cache has a key itemname, and that is a nested dict
 

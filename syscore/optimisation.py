@@ -213,7 +213,7 @@ class GenericOptimiser(object):
         if mp:
             pool = Pool(processes=4)
             mapper = pool.map
-            log.terse('Multiprocessing!!!')
+            log.terse('...multiprocessing')
         else:
             mapper = map
 

@@ -1842,8 +1842,8 @@ class Account(SystemStage):
             notional = this_stage.get_notional_capital()
 
             if not isinstance(notional, pd.core.series.Series):
-                notional_ts = pd.Series(
-                    [notional] * len(capmult), capmult.index)
+                notional_ts = pd.Series([notional] * len(capmult),
+                                        capmult.index)
             else:
                 notional_ts = notional.reindex(capmult.index).ffill()
 
@@ -1851,11 +1851,15 @@ class Account(SystemStage):
 
             return capital
 
-        capital = self.parent.calc_or_cache(
-            "get_actual_capital", ALL_KEYNAME, _get_actual_capital, self, delayfill,
-            roundpositions,
-            flags="delayfill%sroundpositions%s" % (
-                TorF(delayfill), TorF(roundpositions)))
+        flags = ("delayfill%sroundpositions%s" %
+                 (TorF(delayfill), TorF(roundpositions)))
+        capital = self.parent.calc_or_cache("get_actual_capital",
+                                            ALL_KEYNAME,
+                                            _get_actual_capital,
+                                            self,
+                                            delayfill,
+                                            roundpositions,
+                                            flags=flags)
 
         return capital
 
